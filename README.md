@@ -1,4 +1,4 @@
 # Calculator
 A simple command-line Calculator
-# Compile the program from terminal
+# Build
 cc - o calc main.c calc.c stack.c -lm
