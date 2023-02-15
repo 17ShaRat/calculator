@@ -54,9 +54,18 @@ void make_postfix(char *postfix, const char *infix)
 			case '-':
 			case '*':
 			case '/':
-			case '^':
 				// code to handle operator
 				while(NEED_TO_EVALUATE)
+				{
+					if(st->top(st) == '(' || st->top(st) == '{' || st->top(st) == '[')
+						break;
+					postfix[PIDX++] = st->top(st);
+					st->pop(st);
+				}
+				st->push(st, c);
+				break;
+			case '^':
+				while(!st->empty(st) && precedence(st->top(st)) > precedence(c))
 				{
 					if(st->top(st) == '(' || st->top(st) == '{' || st->top(st) == '[')
 						break;
