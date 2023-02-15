@@ -1,78 +1,132 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include "stack.h"
 
 
-void* new_stack(char type)
+static void __push_char(stack_c *st, char val)
 {
-        void* n_stack;
-        if(type == 'i')
-        {
-                n_stack = malloc(sizeof(struct stack_i));
-                stack_i* temp_i = n_stack;
-                temp_i->head = NULL;
-                temp_i->size = 0;
-                temp_i->type = type;
-                temp_i->push = __push_i;
-                temp_i->pop = __pop;
-        }
-        else if(type == 'c')
-        {
-                n_stack = malloc(sizeof(struct stack_c));
-                stack_c* temp_c = n_stack;
-                temp_c->head = NULL;
-                temp_c->size = 0;
-                temp_c->type = type;
-                temp_c->push = __push_c;
-                temp_c->pop = __pop;
-        }
-        else if(type == 'f')
-        {
-                n_stack = malloc(sizeof(struct stack_f));
-                stack_f* temp_f = n_stack;
-                temp_f->head = NULL;
-                temp_f->size = 0;
-                temp_f->type = type;
-                temp_f->push = __push_f;
-                temp_f->pop = __pop;
-        }
-
-        return n_stack;
+	node_c *new_node = (node_c *) malloc(sizeof(node_c ));
+	if(!new_node)
+	{
+		perror("Memory allocation failure\n");
+		exit(1);
+	}
+	new_node->data = val;
+	new_node->next = st->head;
+	st->head = new_node;
+	st->sz++;
+}
+static void __pop_char(stack_c *st)
+{
+	if(st->head == NULL)
+		return;
+	node_c *temp = st->head;
+	st->head = temp->next;
+	free(temp);
+	st->sz--;
+}
+static char __top_char(stack_c *st)
+{
+	if(!st->head)
+	{
+		printf("Stack is empty. Returning error value -1\n");
+		return -1;
+	}
+	return st->head->data;
+}
+static _Bool __empty_char(stack_c *st)
+{
+	return !st->sz;
+};
+static size_t __size_char(stack_c *st)
+{
+	return st->sz;
+}
+stack_c *init_stack_c()
+{
+	stack_c *new_stack = (stack_c*) malloc(sizeof(stack_c));
+	new_stack->head = NULL;
+	new_stack->sz = 0;
+	new_stack->push = __push_char;
+	new_stack->pop = __pop_char;
+	new_stack->top = __top_char;
+	new_stack->empty = __empty_char;
+	new_stack->size = __size_char;
+	return new_stack;
+}
+void delete_stack_char(stack_c *st)
+{
+	node_c *ptr = st->head;
+	while(ptr)
+	{
+		node_c *tmp = ptr->next;
+		free(ptr);
+		ptr = tmp;
+	}
+	free(st);
 }
 
-void __push_i(stack_i* st, int value)
+void __push_double(stack_f *st, double val)
 {
-        node_i* n = (node_i*) malloc(sizeof *n);
-        n->data = value;
-        n->next = st->head;
-        st->head = n;
-        st->size++;
+	node_f *new_node = (node_f *) malloc(sizeof(node_f));
+	if(!new_node)
+	{
+		perror("Memory allocation failure\n");
+		exit(1);
+	}
+	new_node->data = val;
+	new_node->next = st->head;
+	st->head = new_node;
+	st->sz++;
 }
-void __push_c(stack_c* st, char value)
+void __pop_double(stack_f *st)
 {
-        node_c* n = (node_c*) malloc(sizeof *n);
-        n->data = value;
-        n->next = st->head;
-        st->head = n;
-        st->size++;
+	if(st->head == NULL)
+		return;
+	node_f *temp = st->head;
+	st->head = temp->next;
+	free(temp);
+	st->sz--;
 }
-void __push_f(stack_f* st, double value)
+double __top_double(stack_f *st)
 {
-        node_f* n = (node_f*) malloc(sizeof *n);
-        n->data = value;
-        n->next = st->head;
-        st->head = n;
-        st->size++;
+	if(!st->head)
+	{
+		printf("Stack is empty. Returning error value -1\n");
+		return -1;
+	}
+	return st->head->data;
 }
-void __pop(void *st)
+_Bool __empty_double(stack_f *st)
 {
-        stack_i* s = (stack_i *)st;
-        if(s->head)
-        {
-                void* t = s->head->next;
-                free(s->head);
-                s->head = t;
-                s->size--;
-        }
-
+	return !st->sz;
+};
+size_t __size_double(stack_f *st)
+{
+	return st->sz;
+}
+stack_f *init_stack_f()
+{
+	stack_f *new_stack = (stack_f*) malloc(sizeof(stack_f));
+	new_stack->head = NULL;
+	new_stack->sz = 0;
+	new_stack->push = __push_double;
+	new_stack->pop = __pop_double;
+	new_stack->top = __top_double;
+	new_stack->empty = __empty_double;
+	new_stack->size = __size_double;
+	return new_stack;
+}
+void delete_stack_double(stack_f *st)
+{
+	node_f *ptr = st->head;
+	while(ptr)
+	{
+		node_f *tmp = ptr->next;
+		free(ptr);
+		ptr = tmp;
+	}
+	free(st);
 }
