@@ -65,13 +65,6 @@ void make_postfix(char *postfix, const char *infix)
 				st->push(st, c);
 				break;
 			case '^':
-				while(!st->empty(st) && precedence(st->top(st)) > precedence(c))
-				{
-					if(st->top(st) == '(' || st->top(st) == '{' || st->top(st) == '[')
-						break;
-					postfix[PIDX++] = st->top(st);
-					st->pop(st);
-				}
 				st->push(st, c);
 				break;
 			case '(':
@@ -93,7 +86,7 @@ void make_postfix(char *postfix, const char *infix)
 		if(c >= '0' && c <= '9' || c == '.')
 		{
 			/* Add space for separating numbers */
-			if(i != 0 && is_operator(infix[i-1]) || infix[i-1] == ' ' && postfix[PIDX-1] != ' ')
+			if(i != 0 && is_operator(infix[i-1]) || infix[i-1] == ' '|| infix[i-1] == '(' && postfix[PIDX-1] != ' ')
 			{
 				postfix[PIDX++] = ' ';
 			}

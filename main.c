@@ -20,6 +20,7 @@ int main(void)
 		if(infix[0] == 'q' || infix[0] == 'Q')
 			return 0;
 		make_postfix(postfix, infix);
+		printf("%s\n", postfix);
 		double ans = evaluate_postfix(postfix);
 		printf("%lf\n", ans);
 	}
